@@ -6,6 +6,9 @@ import { CopilotPopup } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
 import Navigation from "@/components/landing/navigation";
 import { ThemeProvider } from "@/components/context/theme-provider";
+import { AuthProvider } from "@/components/context/auth-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,29 +31,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+    <AuthProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <CopilotKit runtimeUrl="/api/copilotkit">
-            <Navigation />
-            {children}
-            <CopilotPopup
-              labels={{
-                title: "NotedAI",
-                initial:
-                  "Hello! I'm your NotedAI assistant. How can I help you today?",
-              }}
-            />
-          </CopilotKit>
-        </ThemeProvider>
-      </body>
-    </html>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SidebarProvider>
+              <CopilotKit runtimeUrl="/api/copilotkit">
+                <Navigation />
+                {children}
+                <CopilotPopup
+                  labels={{
+                    title: "NotedAI",
+                    initial:
+                      "Hello! I'm your NotedAI assistant. How can I help you today?",
+                  }}
+                  className="copilot-popup-container"
+                />
+              </CopilotKit>
+              <Toaster />
+            </SidebarProvider>
+          </ThemeProvider>
+        </body>
+      </html>
+    </AuthProvider>
   );
 }
