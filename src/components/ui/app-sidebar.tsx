@@ -25,12 +25,12 @@ const items = [
   },
   {
     title: "Meeting Notes",
-    url: "#",
+    url: "/meeting",
     icon: Inbox,
   },
   {
     title: "Tasks",
-    url: "#",
+    url: "/tasks",
     icon: Notebook,
   },
 ]

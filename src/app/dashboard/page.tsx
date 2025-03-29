@@ -10,7 +10,6 @@ export default function Dashboard() {
           <div>
             <AppSidebar />
           </div>
-
           <Card className="col-span-1 md:col-span-3 w-full dark:border-none">
             <CardContent className="flex flex-col items-center py-4 justify-center w-full">
               <div className="w-full">

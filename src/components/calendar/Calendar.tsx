@@ -9,6 +9,7 @@ import { useUser } from "../context/auth-provider";
 import { EventClickArg, EventDropArg } from "@fullcalendar/core";
 import { Event } from "@/lib/types";
 import { useCopilotFeatures } from "@/hooks/useCopilotFeatures";
+import EventDialog from "./eventDialog";
 
 export default function Calendar() {
   const calendarRef = useRef<FullCalendar>(null);
@@ -105,6 +106,8 @@ export default function Calendar() {
         allDayMaintainDuration={false}
         nextDayThreshold="00:00:00"
       />
+
+      <EventDialog event={selectedEvent} onClose={()=>setSelectedEvent(null)}/>
     </div>
   );
 }
