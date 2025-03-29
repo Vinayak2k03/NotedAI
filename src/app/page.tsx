@@ -2,20 +2,23 @@ import { Spotlight } from "@/components/ui/spotlight-new";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, CalendarCheck, FileText } from "lucide-react";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 
 export default function Home() {
   return (
-    <div className="w-[100vw]">
-      <div className="h-[40rem] w-full rounded-md flex md:items-center md:justify-center bg-black/[0.96] antialiased bg-grid-white/[0.02] relative overflow-hidden">
+    <div className="w-full">
+      <div className="h-[60rem]  w-full rounded-md flex md:items-center md:justify-center bg-black/[0.96] antialiased bg-grid-white/[0.02] relative overflow-hidden">
         <Spotlight />
-        <div className="p-4 max-w-7xl mx-auto relative z-10 w-full pt-20 md:pt-0">
-          <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
-            Meet <span className="text-primary">NotedAI</span>
+        <div className="p-4 max-w-7xl mx-auto relative z-10 w-full pt-20 md:pt-0 text-center">
+          <h1 className="text-4xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
+            <span className="text-primary">
+              <TextHoverEffect text="NotedAI" />
+            </span>
           </h1>
-          <h2 className="text-2xl md:text-3xl font-medium text-center text-neutral-200 mt-4">
+          <h2 className="text-2xl md:text-3xl font-medium text-neutral-200 mt-4">
             Your Second Brain
           </h2>
-          <p className="mt-6 font-normal text-base md:text-lg text-neutral-300 max-w-2xl text-center mx-auto leading-relaxed">
+          <p className="mt-6 text-base md:text-lg text-neutral-300 max-w-2xl mx-auto leading-relaxed">
             Schedule, manage, and chat with your calendar. Get AI-generated
             summaries of meeting notes and ask questions about your content for
             enhanced productivity.
@@ -47,7 +50,7 @@ export default function Home() {
             {/* Feature 1 */}
             <div className="p-6 border border-neutral-800 rounded-xl bg-black/[0.6] backdrop-blur-sm">
               <div className="mb-5 p-3 rounded-full bg-primary/10 w-fit">
-                <CalendarCheck className="h-8 w-8 text-primary" />
+                <CalendarCheck className="h-8 w-8 text-primary" aria-label="Calendar Management" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">
                 Smart Calendar Management
@@ -61,7 +64,7 @@ export default function Home() {
             {/* Feature 2 */}
             <div className="p-6 border border-neutral-800 rounded-xl bg-black/[0.6] backdrop-blur-sm">
               <div className="mb-5 p-3 rounded-full bg-primary/10 w-fit">
-                <FileText className="h-8 w-8 text-primary" />
+                <FileText className="h-8 w-8 text-primary" aria-label="AI Meeting Notes" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">
                 AI-Summarized Meeting Notes
@@ -75,7 +78,7 @@ export default function Home() {
             {/* Feature 3 */}
             <div className="p-6 border border-neutral-800 rounded-xl bg-black/[0.6] backdrop-blur-sm">
               <div className="mb-5 p-3 rounded-full bg-primary/10 w-fit">
-                <MessageSquare className="h-8 w-8 text-primary" />
+                <MessageSquare className="h-8 w-8 text-primary" aria-label="Conversational AI" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">
                 Conversational Knowledge Base

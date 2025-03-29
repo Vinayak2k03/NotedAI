@@ -8,6 +8,7 @@ import { useEvents } from "@/hooks/useEvents";
 import { useUser } from "../context/auth-provider";
 import { EventClickArg, EventDropArg } from "@fullcalendar/core";
 import { Event } from "@/lib/types";
+import { useCopilotFeatures } from "@/hooks/useCopilotFeatures";
 
 export default function Calendar() {
   const calendarRef = useRef<FullCalendar>(null);
@@ -16,6 +17,8 @@ export default function Calendar() {
     useState(false);
   const user = useUser();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+
+  useCopilotFeatures({ events, selectedEvent, addEvent, deleteEvent });
 
   const handleEventClick = useCallback(
     (clickInfo: EventClickArg) => {

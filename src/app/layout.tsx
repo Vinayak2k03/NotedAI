@@ -43,7 +43,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <SidebarProvider>
-              <CopilotKit runtimeUrl="/api/copilotkit">
+              <CopilotKit showDevConsole={false} runtimeUrl="/api/copilotkit">
                 <Navigation />
                 {children}
                 <CopilotPopup

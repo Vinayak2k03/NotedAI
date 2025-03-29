@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@copilotkit/react-core": "^1.8.2",
-    "@copilotkit/react-textarea": "^1.8.2",
-    "@copilotkit/react-ui": "^1.8.2",
+    "@copilotkit/react-core": "^1.8.4",
+    "@copilotkit/react-textarea": "^1.8.4",
+    "@copilotkit/react-ui": "^1.8.4",
     "@copilotkit/runtime": "^1.8.2",
+    "@copilotkit/runtime-client-gql": "1.8.2",
+    "@copilotkit/shared": "1.8.2",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/google-calendar": "^6.1.15",
@@ -29,6 +31,7 @@
     "clsx": "^2.1.1",
     "copilotkit": "^0.0.15",
     "date-fns": "^4.1.0",
+    "framer-motion": "^12.6.2",
     "groq-sdk": "^0.17.0",
     "lucide-react": "^0.484.0",
     "mini-svg-data-uri": "^1.4.4",
