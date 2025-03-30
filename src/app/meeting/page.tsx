@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ArrowLeftIcon } from "lucide-react";
 
 interface MeetingProps {
   id: string;
@@ -130,9 +131,20 @@ export default function Meeting() {
       {/* Header with gradient background */}
       <div className="bg-gradient-to-r from-slate-800 to-slate-900 -mx-6 px-6 py-8 mb-8 shadow-md">
         <div className="container mx-auto max-w-7xl flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-white tracking-tight">
-            Your Meetings
-          </h1>
+          <div className='flex items-center gap-4'>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => router.push("/dashboard")}
+              className="rounded-full w-10 h-10 bg-white/10 border-transparent backdrop-blur-sm hover:bg-white/20"
+            >
+              <ArrowLeftIcon className="h-5 w-5" />
+            </Button>
+            <h1 className="text-3xl font-bold text-white tracking-tight">
+              Your Meetings
+            </h1>
+          </div>
+
           <Button
             onClick={() => setIsDialogOpen(true)}
             className="flex items-center gap-2 bg-white/15 text-white border-none hover:bg-white/25 transition-all"
