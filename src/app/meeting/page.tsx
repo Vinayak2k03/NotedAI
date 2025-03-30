@@ -8,7 +8,23 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { DeleteIcon, Plus, CalendarCheck, Clock, ArrowUpRight } from "lucide-react";
+import {
+  DeleteIcon,
+  Plus,
+  CalendarCheck,
+  Clock,
+  ArrowUpRight,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -20,47 +36,49 @@ interface MeetingProps {
 }
 
 export default function Meeting() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newMeetingName, setNewMeetingName] = useState("");
+  const [meetings, setMeetings] = useState<MeetingProps[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const router = useRouter();
+
   // Default meetings data
   const defaultMeetings = [
     {
       id: "1",
       name: "Weekly Team Sync",
       date: "2025-03-28",
-      time: "10:00 AM"
+      time: "10:00 AM",
     },
     {
       id: "2",
       name: "Product Roadmap Planning",
       date: "2025-03-30",
-      time: "2:30 PM"
+      time: "2:30 PM",
     },
     {
       id: "3",
       name: "Client Presentation: ProjectX",
       date: "2025-04-02",
-      time: "11:15 AM"
+      time: "11:15 AM",
     },
     {
       id: "4",
       name: "Engineering Standup",
       date: "2025-04-04",
-      time: "9:00 AM"
+      time: "9:00 AM",
     },
     {
       id: "5",
       name: "Quarterly Review",
       date: "2025-04-10",
-      time: "3:00 PM"
-    }
+      time: "3:00 PM",
+    },
   ];
 
-  const [meetings, setMeetings] = useState<MeetingProps[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const router = useRouter();
-  
   // Load meetings on component mount - only once
   useEffect(() => {
-    const storedMeetings = localStorage.getItem('meetings');
+    const storedMeetings = localStorage.getItem("meetings");
     if (storedMeetings) {
       try {
         const parsedMeetings = JSON.parse(storedMeetings);
@@ -68,32 +86,40 @@ export default function Meeting() {
       } catch (error) {
         console.error("Error parsing meetings from localStorage:", error);
         setMeetings(defaultMeetings);
-        localStorage.setItem('meetings', JSON.stringify(defaultMeetings));
+        localStorage.setItem("meetings", JSON.stringify(defaultMeetings));
       }
     } else {
       setMeetings(defaultMeetings);
-      localStorage.setItem('meetings', JSON.stringify(defaultMeetings));
+      localStorage.setItem("meetings", JSON.stringify(defaultMeetings));
     }
     setIsInitialized(true);
   }, []);
 
   const addMeeting = () => {
+    if (!newMeetingName.trim()) return;
+
     const newMeeting = {
       id: Date.now().toString(),
-      name: `New Meeting ${meetings.length + 1}`,
-      date: new Date().toISOString().split('T')[0],
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      name: newMeetingName,
+      date: new Date().toISOString().split("T")[0],
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
-    
+
     const updatedMeetings = [...meetings, newMeeting];
     setMeetings(updatedMeetings);
-    localStorage.setItem('meetings', JSON.stringify(updatedMeetings));
+    localStorage.setItem("meetings", JSON.stringify(updatedMeetings));
+
+    setNewMeetingName("");
+    setIsDialogOpen(false);
   };
 
   const handleDelete = (id: string) => {
-    const updatedMeetings = meetings.filter(meeting => meeting.id !== id);
+    const updatedMeetings = meetings.filter((meeting) => meeting.id !== id);
     setMeetings(updatedMeetings);
-    localStorage.setItem('meetings', JSON.stringify(updatedMeetings));
+    localStorage.setItem("meetings", JSON.stringify(updatedMeetings));
   };
 
   // Get today's date for highlighting
@@ -104,9 +130,11 @@ export default function Meeting() {
       {/* Header with gradient background */}
       <div className="bg-gradient-to-r from-slate-800 to-slate-900 -mx-6 px-6 py-8 mb-8 shadow-md">
         <div className="container mx-auto max-w-7xl flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-white tracking-tight">Your Meetings</h1>
-          <Button 
-            onClick={addMeeting}
+          <h1 className="text-3xl font-bold text-white tracking-tight">
+            Your Meetings
+          </h1>
+          <Button
+            onClick={() => setIsDialogOpen(true)}
             className="flex items-center gap-2 bg-white/15 text-white border-none hover:bg-white/25 transition-all"
           >
             <Plus className="h-4 w-4" />
@@ -114,7 +142,7 @@ export default function Meeting() {
           </Button>
         </div>
       </div>
-      
+
       <div className="px-6">
         {meetings.length > 0 ? (
           <>
@@ -122,25 +150,36 @@ export default function Meeting() {
               {meetings.map((meeting) => {
                 const isToday = new Date(meeting.date).toDateString() === today;
                 const isPast = new Date(meeting.date) < new Date(today);
-                const borderColor = isToday ? 'border-t-blue-500' : 
-                                   isPast ? 'border-t-gray-400' : 'border-t-green-500';
-                const statusBadge = isToday ? 
-                  <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-medium px-2 py-1 rounded-full">Today</span> : 
-                  isPast ? 
-                  <span className="bg-gray-500/10 text-gray-600 dark:text-gray-400 text-xs font-medium px-2 py-1 rounded-full">Past</span> :
-                  <span className="bg-green-500/10 text-green-600 dark:text-green-400 text-xs font-medium px-2 py-1 rounded-full">Upcoming</span>;
-                
+                const borderColor = isToday
+                  ? "border-t-blue-500"
+                  : isPast
+                  ? "border-t-gray-400"
+                  : "border-t-green-500";
+                const statusBadge = isToday ? (
+                  <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-medium px-2 py-1 rounded-full">
+                    Today
+                  </span>
+                ) : isPast ? (
+                  <span className="bg-gray-500/10 text-gray-600 dark:text-gray-400 text-xs font-medium px-2 py-1 rounded-full">
+                    Past
+                  </span>
+                ) : (
+                  <span className="bg-green-500/10 text-green-600 dark:text-green-400 text-xs font-medium px-2 py-1 rounded-full">
+                    Upcoming
+                  </span>
+                );
+
                 return (
-                  <Card 
-                    key={meeting.id} 
+                  <Card
+                    key={meeting.id}
                     className={`flex flex-col overflow-hidden shadow-md hover:shadow-lg transition-all border border-border ${borderColor} border-t-4`}
                   >
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-start mb-1">
                         {statusBadge}
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDelete(meeting.id);
@@ -154,16 +193,21 @@ export default function Meeting() {
                         {meeting.name}
                       </CardTitle>
                     </CardHeader>
-                    
+
                     <CardContent className="pb-4 pt-0">
                       <div className="flex flex-col space-y-2 text-sm text-muted-foreground">
                         <div className="flex items-center gap-2">
                           <CalendarCheck className="h-4 w-4 text-slate-500" />
-                          <span>{new Date(meeting.date).toLocaleDateString("en-US", {
-                            weekday: "short",
-                            month: "short",
-                            day: "numeric"
-                          })}</span>
+                          <span>
+                            {new Date(meeting.date).toLocaleDateString(
+                              "en-US",
+                              {
+                                weekday: "short",
+                                month: "short",
+                                day: "numeric",
+                              }
+                            )}
+                          </span>
                         </div>
                         {meeting.time && (
                           <div className="flex items-center gap-2">
@@ -173,7 +217,7 @@ export default function Meeting() {
                         )}
                       </div>
                     </CardContent>
-                    
+
                     <CardFooter className="pt-2 mt-auto">
                       <Button
                         variant="secondary"
@@ -188,9 +232,10 @@ export default function Meeting() {
                 );
               })}
             </div>
-            
+
             <div className="mt-8 text-center text-sm text-muted-foreground">
-              Showing {meetings.length} {meetings.length === 1 ? 'meeting' : 'meetings'}
+              Showing {meetings.length}{" "}
+              {meetings.length === 1 ? "meeting" : "meetings"}
             </div>
           </>
         ) : (
@@ -201,12 +246,10 @@ export default function Meeting() {
               </div>
               <h3 className="text-lg font-medium mt-2">No meetings found</h3>
               <p className="text-muted-foreground max-w-sm mx-auto mb-4">
-                Create your first meeting to get started with organizing notes and summaries.
+                Create your first meeting to get started with organizing notes
+                and summaries.
               </p>
-              <Button 
-                onClick={addMeeting}
-                className="flex items-center gap-2"
-              >
+              <Button onClick={addMeeting} className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 Create Meeting
               </Button>
@@ -214,6 +257,50 @@ export default function Meeting() {
           </div>
         )}
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Create New Meeting</DialogTitle>
+            <DialogDescription>
+              Enter a name for your new meeting.
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addMeeting();
+            }}
+          >
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Name
+                </Label>
+                <Input
+                  id="name"
+                  value={newMeetingName}
+                  onChange={(e) => setNewMeetingName(e.target.value)}
+                  placeholder="Weekly Team Sync"
+                  className="col-span-3"
+                  autoComplete="off"
+                  autoFocus
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Create Meeting</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
