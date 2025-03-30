@@ -18,74 +18,59 @@ export default function Navigation() {
   };
 
   return (
-    <header
-      className={
-        "bg-background border-b px-4 lg:px-6 h-16 flex items-center justify-between fixed top-0 w-full z-50 shadow-sm text-sm"
-      }
-    >
-      <Link href="/" className="flex gap-2 items-center">
-        <Logo />
-        <span className="font-semibold text-xl">NotedAI</span>
-      </Link>
+    <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-neutral-200/20 dark:border-neutral-800/30">
+      <div className="container mx-auto h-16 flex items-center justify-between px-4">
+        <Link 
+          href="/" 
+          className="flex items-center gap-2.5 hover:opacity-90 transition-opacity"
+        >
+          <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-md">
+            <Logo className="size-5 text-primary" />
+          </div>
+          <span className="font-semibold text-xl tracking-tight">NotedAI</span>
+        </Link>
 
-      <div className="flex gap-4 items-center">
-        {user.current ? (
-          <>
-            <Link
-              href="/dashboard"
-              className={`
-             transition-all duration-300 ease-in-out
-            relative overflow-hidden group
-            
-          `}
-            >
-              <span className="relative z-10">Dashboard</span>
-              <span
-                className="absolute bottom-0 left-0 w-full h-[0.08rem] bg-foreground 
-              transform -translate-x-full group-hover:translate-x-0 
-              transition-transform duration-300 ease-in-out"
-              />
-            </Link>
-            <div
-              className={`
-            transition-all duration-300 ease-in-out
-            relative overflow-hidden group hover:cursor-pointer
-           
-          `}
-              onClick={handleSignOut}
-            >
-              {loading ? (
-                <Icons.spinner className="size-4 animate-spin" />
-              ) : (
-                <>
-                  <span className="relative z-10">Sign Out</span>
-                  <span
-                    className="absolute bottom-0 left-0 w-full h-[0.08rem] bg-foreground 
-                  transform -translate-x-full group-hover:translate-x-0 
-                  transition-transform duration-300 ease-in-out"
-                  />
-                </>
-              )}
+        <div className="flex items-center gap-6">
+          {user.current ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="relative text-sm font-medium text-foreground/80 hover:text-foreground transition-colors after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-primary after:transition-all"
+              >
+                Dashboard
+              </Link>
+              
+              <button
+                onClick={handleSignOut}
+                className="relative text-sm font-medium text-foreground/80 hover:text-foreground transition-colors after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-destructive after:transition-all"
+                disabled={loading}
+              >
+                {loading ? (
+                  <Icons.spinner className="size-4 animate-spin" />
+                ) : (
+                  "Sign Out"
+                )}
+              </button>
+            </>
+          ) : (
+            <div className="flex items-center gap-4">
+              <Link
+                href="/signin"
+                className="text-sm font-medium px-4 py-2 rounded-md hover:bg-accent transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signup"
+                className="text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
+              >
+                Get Started
+              </Link>
             </div>
-          </>
-        ) : (
-          <Link
-            href="/signin"
-            className={`
-            font-medium transition-all duration-300 ease-in-out
-            relative overflow-hidden group hover:cursor-pointer
-          
-          `}
-          >
-            <span className="relative z-10">Sign In</span>
-            <span
-              className="absolute bottom-0 left-0 w-full h-[0.08rem] bg-foreground 
-            transform -translate-x-full group-hover:translate-x-0 
-            transition-transform duration-300 ease-in-out"
-            />
-          </Link>
-        )}
-        <ThemeMode />
+          )}
+          <div className="border-l border-neutral-200/20 dark:border-neutral-800/30 h-8 mx-1"></div>
+          <ThemeMode />
+        </div>
       </div>
     </header>
   );
