@@ -88,6 +88,8 @@ export default function Dashboard() {
 
   // State for notification dropdown
   const [showNotifications, setShowNotifications] = useState(false);
+  const displayName = currentUser ? currentUser.$id?.substring(0, 8) || "Guest" : "Guest";
+
 
   return (
     <main className="flex-1 overflow-y-auto bg-black min-h-screen">
@@ -105,32 +107,7 @@ export default function Dashboard() {
               </span>
             </div>
 
-            {/* User profile with modern styling */}
-            <div className="px-3 py-4">
-              <div className="p-2 rounded-md hover:bg-slate-800/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-9 w-9 border border-slate-700">
-                    <AvatarImage src="" />{" "}
-                    <AvatarFallback className="bg-slate-800 text-slate-200">
-                      {currentUser?.name
-                        ? currentUser.name
-                            .split(" ")
-                            .map((part) => part[0])
-                            .slice(0, 2)
-                            .join("")
-                            .toUpperCase()
-                        : "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm text-white">
-                      {currentUser?.name || "Guest User"}
-                    </p>
-                    <p className="text-xs text-slate-400">Account</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+         
 
             {/* Refined navigation with improved spacing */}
             <div className="flex-1 overflow-y-auto py-6 px-3 space-y-0.5">
@@ -243,9 +220,6 @@ export default function Dashboard() {
                   {/* Welcome header with clean typography */}
                   <div className="flex justify-between items-start">
                     <div>
-                      <h1 className="text-2xl font-semibold text-white">
-                        {greeting}, {currentUser?.name || "Guest"}
-                      </h1>
                       <p className="text-slate-400 mt-1">
                         Here&apos;s an overview of your meetings and notes
                       </p>
