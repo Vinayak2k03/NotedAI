@@ -21,7 +21,6 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { useUser } from "@/components/context/auth-provider";
 
 // Custom sidebar navigation item component with refined hover effect
 function NavItem({
@@ -57,11 +56,6 @@ function NavItem({
 }
 
 export default function Dashboard() {
-  const { current: currentUser } = useUser();
-
-  // Get current date for the welcome message
-  const currentHour = new Date().getHours();
-
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
