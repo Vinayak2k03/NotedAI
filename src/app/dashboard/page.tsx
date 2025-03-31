@@ -24,7 +24,6 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { useUser } from "@/components/context/auth-provider";
 
-
 // Custom sidebar navigation item component with refined hover effect
 function NavItem({
   href,
@@ -111,7 +110,7 @@ export default function Dashboard() {
               <div className="p-2 rounded-md hover:bg-slate-800/50 transition-colors">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-9 w-9 border border-slate-700">
-                    <AvatarImage src={currentUser?.prefs?.avatar || ""} />
+                    <AvatarImage src="" />{" "}
                     <AvatarFallback className="bg-slate-800 text-slate-200">
                       {currentUser?.name
                         ? currentUser.name
@@ -127,9 +126,7 @@ export default function Dashboard() {
                     <p className="text-sm text-white">
                       {currentUser?.name || "Guest User"}
                     </p>
-                    <p className="text-xs text-slate-400">
-                      {currentUser?.email || ""}
-                    </p>
+                    <p className="text-xs text-slate-400">Account</p>
                   </div>
                 </div>
               </div>
@@ -237,13 +234,6 @@ export default function Dashboard() {
                   <PlusIcon className="h-3.5 w-3.5" />
                   <span>New Meeting</span>
                 </Button>
-
-                <Avatar className="h-8 w-8 border border-slate-700/50">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback className="bg-slate-800 text-slate-200">
-                    JD
-                  </AvatarFallback>
-                </Avatar>
               </div>
             </div>
 
