@@ -37,10 +37,7 @@ export default function Home() {
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mt-6 relative z-10">
             <div className="relative">
-              <TextHoverEffect
-                text="NotedAI"
-                className="bg-gradient-to-br from-primary via-purple-400 to-blue-500 text-transparent bg-clip-text"
-              />
+              <TextHoverEffect text="NotedAI" />
               <div className="absolute -bottom-1.5 left-0 right-0 h-px bg-gradient-to-r from-primary/0 via-primary/80 to-primary/0 blur-sm"></div>
             </div>
           </h1>
