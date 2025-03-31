@@ -50,12 +50,9 @@ export default function RootLayout({
                   labels={{
                     title: "NotedAI",
                     initial:
-                      "Hello! I'm your NotedAI assistant. How can I help you today?",
-                    buttonLabel: "ASK NotedAI", // Add this line to change the button text
+                      "Hello! I'm your NotedAI assistant. How can I help you today?"
                   }}
                   className="copilot-popup-container"
-                  buttonPosition="bottom-right" // Position the button in the bottom right corner
-                  buttonClassName="px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-full shadow-lg flex items-center gap-2 transition-all" // Custom styling for the button
                 />
               </CopilotKit>
               <Toaster />
