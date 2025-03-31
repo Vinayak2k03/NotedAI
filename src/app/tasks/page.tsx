@@ -47,6 +47,7 @@ import {
 } from "lucide-react";
 import { useUser } from "@/components/context/auth-provider";
 import { useRouter } from "next/navigation";
+import { useTaskCopilotFeatures } from "@/hooks/useTaskCopilotFeatures";
 
 interface Task {
   id: string;
@@ -96,8 +97,22 @@ export default function Tasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const handleAddTask = () => {
-    if (!newTask.title?.trim()) {
+  // Modified to support adding tasks from the Copilot
+  const handleAddTask = (taskData?: Omit<Task, "id">) => {
+    // First, ensure we have the current state by using a function parameter
+    const taskToAdd = taskData || { ...newTask };
+
+    // Debug logging
+    console.log("Task being added:", taskToAdd);
+    console.log(
+      "Title value:",
+      taskToAdd.title,
+      "Length:",
+      taskToAdd.title?.length
+    );
+
+    // More robust title check
+    if (!taskToAdd.title || taskToAdd.title.trim() === "") {
       toast.error("Task title required", {
         description: "Please provide a title for your task.",
       });
@@ -106,34 +121,57 @@ export default function Tasks() {
 
     setIsLoading(true);
 
-    const task: Task = {
-      id: Date.now().toString(),
-      title: newTask.title || "",
-      description: newTask.description || "",
-      dueDate: newTask.dueDate || new Date().toISOString().split("T")[0],
-      completed: false,
-      priority: newTask.priority || "medium",
-      tags: newTask.tags || [],
-    };
+    try {
+      const task: Task = {
+        id: Date.now().toString(),
+        title: taskToAdd.title.trim(), // Ensure title is trimmed
+        description: taskToAdd.description || "",
+        dueDate: taskToAdd.dueDate || new Date().toISOString().split("T")[0],
+        completed: false,
+        priority: taskToAdd.priority || "medium",
+        tags: taskToAdd.tags || [],
+      };
 
-    setTasks((prevTasks) => [...prevTasks, task]);
+      // First create a copy of the previous tasks to avoid state issues
+      setTasks((prevTasks) => [...prevTasks, task]);
 
-    // Reset form
-    setNewTask({
-      title: "",
-      description: "",
-      dueDate: "",
-      completed: false,
-      priority: "medium",
-      tags: [],
-    });
+      // Only reset form if coming from the dialog, not from Copilot
+      // if (!taskData) {
+      //   setNewTask({
+      //     title: "",
+      //     description: "",
+      //     dueDate: "",
+      //     completed: false,
+      //     priority: "medium",
+      //     tags: [],
+      //   });
+      //   setIsDialogOpen(false);
+      // }
 
-    setIsDialogOpen(false);
-    setIsLoading(false);
+      setNewTask({
+        title: "",
+        description: "",
+        dueDate: "",
+        completed: false,
+        priority: "medium",
+        tags: [],
+      });
+      setIsDialogOpen(false);
 
-    toast.success("Task created", {
-      description: "Your task was successfully created.",
-    });
+      toast.success("Task created", {
+        description: "Your task was successfully created.",
+      });
+
+      return task;
+    } catch (error) {
+      console.error("Error adding task:", error);
+      toast.error("Failed to add task", {
+        description: "An unexpected error occurred.",
+      });
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const toggleTaskCompletion = (id: string) => {
@@ -214,6 +252,15 @@ export default function Tasks() {
       });
     }
   };
+
+  // Initialize the copilot features
+  useTaskCopilotFeatures({
+    tasks,
+    addTask: handleAddTask,
+    deleteTask,
+    toggleTaskCompletion,
+    formatDueDate,
+  });
 
   // Helper to get priority-related styles
   const getPriorityStyles = (priority: string, completed: boolean) => {
@@ -423,9 +470,14 @@ export default function Tasks() {
                   Cancel
                 </Button>
                 <Button
-                  onClick={handleAddTask}
+                  onClick={() => {
+                    // Create a local copy of the task data to prevent any race conditions
+                    const currentTask = { ...newTask };
+                    console.log("Submitting task:", currentTask);
+                    handleAddTask(currentTask);
+                  }}
                   disabled={isLoading || !newTask.title?.trim()}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className=""
                 >
                   {isLoading ? "Creating..." : "Create Task"}
                 </Button>
@@ -518,66 +570,60 @@ export default function Tasks() {
             return (
               <Card
                 key={task.id}
-                className={`group border ${styles.borderColor} ${styles.bgColor} hover:shadow-lg transition-all overflow-hidden`}
+                className={`group border-0 shadow-md hover:shadow-lg transition-all overflow-hidden bg-gradient-to-b from-slate-900/95 to-slate-950/90 backdrop-blur-sm ${
+                  task.completed ? "opacity-80" : ""
+                }`}
               >
-                {/* Priority indicator strip */}
-                <div className={`h-0.5 w-full ${styles.accentColor}`}></div>
+                {/* Left side priority indicator bar - slightly wider */}
+                <div
+                  className={`absolute left-0 top-0 bottom-0 w-1.5 ${styles.accentColor}`}
+                ></div>
 
-                <div className="px-4 pt-3 pb-3">
+                <div className="p-5 pl-6">
+                  {/* Header with checkbox and delete */}
                   <div className="flex justify-between items-start gap-3">
-                    <div className="flex items-start gap-2.5">
-                      <Checkbox
-                        checked={task.completed}
-                        onCheckedChange={() => toggleTaskCompletion(task.id)}
-                        className={`h-4 w-4 mt-1 rounded-sm border ${
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <div
+                        className={`p-0.5 rounded-full ${
                           task.completed
-                            ? "border-green-500/40 data-[state=checked]:bg-green-600/30 data-[state=checked]:text-green-200"
-                            : task.priority === "high"
-                            ? "border-red-500/40 data-[state=checked]:bg-red-600/30"
-                            : task.priority === "medium"
-                            ? "border-orange-500/40 data-[state=checked]:bg-orange-600/30"
-                            : "border-blue-500/40 data-[state=checked]:bg-blue-600/30"
+                            ? "bg-green-900/30"
+                            : styles.accentColor
                         }`}
-                      />
-                      <div>
+                      >
+                        <Checkbox
+                          checked={task.completed}
+                          onCheckedChange={() => toggleTaskCompletion(task.id)}
+                          className={`h-5 w-5 rounded-full border-0 ${
+                            task.completed
+                              ? "text-green-400 data-[state=checked]:bg-green-500/30"
+                              : task.priority === "high"
+                              ? "text-red-400 data-[state=checked]:bg-red-500/30"
+                              : task.priority === "medium"
+                              ? "text-orange-400 data-[state=checked]:bg-orange-500/30"
+                              : "text-blue-400 data-[state=checked]:bg-blue-500/30"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
                         <h3
-                          className={`text-sm font-medium ${
+                          className={`text-base font-medium leading-snug truncate ${
                             task.completed
                               ? "line-through text-slate-400/80"
-                              : "text-slate-200"
+                              : "text-slate-50"
                           }`}
                         >
                           {task.title}
                         </h3>
                         {task.description && (
                           <p
-                            className={`mt-0.5 text-xs leading-normal line-clamp-2 ${
+                            className={`mt-1 text-sm leading-relaxed line-clamp-2 ${
                               task.completed
                                 ? "text-slate-500/70"
-                                : "text-slate-400"
+                                : "text-slate-300"
                             }`}
                           >
                             {task.description}
                           </p>
-                        )}
-
-                        {/* Show tags inline with compact styling */}
-                        {task.tags && task.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-2">
-                            {task.tags.map((tag) => (
-                              <Badge
-                                key={tag}
-                                variant="secondary"
-                                className={`text-[0.65rem] px-1.5 py-0 h-4 font-normal bg-slate-800/50 ${
-                                  tagFilter === tag
-                                    ? "ring-1 ring-blue-500/50"
-                                    : ""
-                                }`}
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
                         )}
                       </div>
                     </div>
@@ -585,18 +631,18 @@ export default function Tasks() {
                       variant="ghost"
                       size="sm"
                       onClick={() => deleteTask(task.id)}
-                      className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-full text-slate-400 hover:text-red-400 hover:bg-red-900/20"
+                      className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-full text-slate-400 hover:text-red-400 hover:bg-red-900/20"
                     >
-                      <X className="h-3.5 w-3.5" />
+                      <X className="h-4 w-4" />
                     </Button>
                   </div>
 
-                  {/* Due date and priority in footer */}
-                  <div className="flex justify-between items-center mt-2 pt-2 border-t border-slate-800/40 text-xs">
+                  {/* Due date and priority badge */}
+                  <div className="flex justify-between items-center mt-4 text-sm">
                     <div
-                      className={`flex items-center gap-1 ${styles.iconColor}`}
+                      className={`flex items-center gap-2 ${styles.iconColor} bg-slate-800/60 px-2.5 py-1 rounded-full`}
                     >
-                      <CalendarCheck className="h-3 w-3" />
+                      <CalendarCheck className="h-3.5 w-3.5" />
                       <span className={`${styles.textColor}`}>
                         {formatDueDate(task.dueDate)}
                       </span>
@@ -604,13 +650,35 @@ export default function Tasks() {
 
                     <Badge
                       variant={styles.badgeVariant}
-                      className={`text-[0.6rem] px-1.5 py-0 font-medium h-4 ${styles.badgeTextColor}`}
+                      className={`text-xs px-2.5 py-0.5 rounded-full ${styles.badgeTextColor}`}
                     >
                       {task.priority.charAt(0).toUpperCase() +
                         task.priority.slice(1)}
                     </Badge>
                   </div>
+
+                  {/* Tags at bottom */}
+                  {task.tags && task.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-slate-700/30">
+                      {task.tags.map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className={`text-xs px-2.5 py-0.5 rounded-full bg-slate-800/60 hover:bg-slate-700/70 transition-colors ${
+                            tagFilter === tag ? "ring-1 ring-blue-400" : ""
+                          }`}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
+                {/* Completion overlay - lighter */}
+                {task.completed && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-900/5 to-green-900/10 pointer-events-none" />
+                )}
               </Card>
             );
           })}
