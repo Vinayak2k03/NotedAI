@@ -18,7 +18,6 @@ import {
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
@@ -62,12 +61,6 @@ export default function Dashboard() {
 
   // Get current date for the welcome message
   const currentHour = new Date().getHours();
-  let greeting = "Good morning";
-  if (currentHour >= 12 && currentHour < 18) {
-    greeting = "Good afternoon";
-  } else if (currentHour >= 18) {
-    greeting = "Good evening";
-  }
 
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -88,8 +81,6 @@ export default function Dashboard() {
 
   // State for notification dropdown
   const [showNotifications, setShowNotifications] = useState(false);
-  const displayName = currentUser ? currentUser.$id?.substring(0, 8) || "Guest" : "Guest";
-
 
   return (
     <main className="flex-1 overflow-y-auto bg-black min-h-screen">
