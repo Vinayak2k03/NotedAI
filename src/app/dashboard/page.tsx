@@ -27,8 +27,19 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { useUser } from "@/components/context/auth-provider";
 
+
 // Custom sidebar navigation item component with refined hover effect
-function NavItem({ href, icon: Icon, label, active }) {
+function NavItem({
+  href,
+  icon: Icon,
+  label,
+  active,
+}: {
+  href: string;
+  icon: React.ElementType;
+  label: string;
+  active: boolean;
+}) {
   return (
     <Link
       href={href}
