@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { toast} from "sonner";
+import { toast } from "sonner";
 import {
   CheckCircle,
   Plus,
@@ -53,10 +51,18 @@ interface Task {
 
 export default function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTask, setNewTask] = useState<Partial<Task>>({
+  // Instead of using Partial<Task>, define it with required properties but optional values:
+  const [newTask, setNewTask] = useState<{
+    title: string;
+    description: string;
+    dueDate: string;
+    completed: boolean;
+    priority: "low" | "medium" | "high";
+    tags: string[];
+  }>({
     title: "",
     description: "",
-    dueDate: "",
+    dueDate: new Date().toISOString().split("T")[0], // Default to today
     completed: false,
     priority: "medium",
     tags: [],
@@ -462,10 +468,27 @@ export default function Tasks() {
                 </Button>
                 <Button
                   onClick={() => {
-                    // Create a local copy of the task data to prevent any race conditions
-                    const currentTask = { ...newTask };
-                    console.log("Submitting task:", currentTask);
-                    handleAddTask(currentTask);
+                    // Create a local copy and ensure all required properties are present
+                    const currentTask = {
+                      title: newTask.title || "", // Ensure title is never undefined
+                      description: newTask.description || "", // Ensure description is never undefined
+                      dueDate:
+                        newTask.dueDate ||
+                        new Date().toISOString().split("T")[0], // Default to today
+                      completed: newTask.completed || false, // Default to false
+                      priority: newTask.priority || "medium", // Default to medium
+                      tags: newTask.tags || [], // Default to empty array
+                    };
+
+                    // Only proceed if title is not empty after trimming
+                    if (currentTask.title.trim() !== "") {
+                      console.log("Submitting task:", currentTask);
+                      handleAddTask(currentTask);
+                    } else {
+                      toast.error("Task title required", {
+                        description: "Please provide a title for your task.",
+                      });
+                    }
                   }}
                   disabled={isLoading || !newTask.title?.trim()}
                   className=""
