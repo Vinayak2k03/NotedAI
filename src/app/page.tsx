@@ -185,7 +185,7 @@ export default function Home() {
             <div className="md:col-span-2">
               <div className="flex items-center gap-2.5 mb-6">
                 <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-md">
-                  <Logo className="size-5 text-primary" />
+                  <Logo/>
                 </div>
                 <span className="font-bold text-xl text-white">NotedAI</span>
               </div>
