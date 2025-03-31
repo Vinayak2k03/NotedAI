@@ -4,7 +4,7 @@ import React, { useState, useEffect, useId } from "react";
 import "@/app/styles/prism-theme.css";
 
 import { motion } from "motion/react";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils"; // Changed from @/utils/cn to @/lib/utils
 
 export interface ContainerTextFlipProps {
   /** Array of words to cycle through in the animation */
@@ -34,7 +34,6 @@ export function ContainerTextFlip({
   const updateWidthForWord = () => {
     if (textRef.current) {
       // Add some padding to the text width (30px on each side)
-      // Add a description to the @ts-expect-error
       // @ts-expect-error - Next.js special import for optimizing fonts
       const textWidth = textRef.current.scrollWidth + 30;
       setWidth(textWidth);

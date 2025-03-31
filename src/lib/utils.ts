@@ -38,7 +38,6 @@ export function parseDate(
       return { date, time };
     }
   }
-
   return { date: new Date(), time: undefined };
 }
 
