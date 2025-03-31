@@ -3,9 +3,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import googleCalendarPlugin from "@fullcalendar/google-calendar";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect,useRef, useState } from "react";
 import { useEvents } from "@/hooks/useEvents";
-import { useUser } from "../context/auth-provider";
 import { EventClickArg, EventDropArg } from "@fullcalendar/core";
 import { Event } from "@/lib/types";
 import { useCopilotFeatures } from "@/hooks/useCopilotFeatures";
@@ -14,7 +13,6 @@ import EventDialog from "./eventDialog";
 export default function Calendar() {
   const calendarRef = useRef<FullCalendar>(null);
   const { events, addEvent, deleteEvent, updateEvent } = useEvents();
-  const user = useUser();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useCopilotFeatures({ events, selectedEvent, addEvent, deleteEvent });

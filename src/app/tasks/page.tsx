@@ -38,7 +38,6 @@ import {
   AlertCircle,
   ArrowLeftIcon,
 } from "lucide-react";
-import { useUser } from "@/components/context/auth-provider";
 import { useRouter } from "next/navigation";
 import { useTaskCopilotFeatures } from "@/hooks/useTaskCopilotFeatures";
 

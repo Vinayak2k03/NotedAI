@@ -257,7 +257,7 @@ export default function Dashboard() {
                         {greeting}, {currentUser?.name || "Guest"}
                       </h1>
                       <p className="text-slate-400 mt-1">
-                        Here's an overview of your meetings and notes
+                        Here&apos;s an overview of your meetings and notes
                       </p>
                     </div>
                   </div>
