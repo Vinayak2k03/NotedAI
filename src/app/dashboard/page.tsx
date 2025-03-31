@@ -6,16 +6,13 @@ import {
   BarChart3Icon,
   ListTodoIcon,
   ClockIcon,
-  HomeIcon,
   FileTextIcon,
   UsersIcon,
   Settings2Icon,
   LayoutDashboardIcon,
-  LogOutIcon,
   BellIcon,
   SearchIcon,
   PlusIcon,
-  ChevronRightIcon,
   MoreHorizontalIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";

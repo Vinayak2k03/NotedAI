@@ -121,7 +121,7 @@ export const useCopilotFeatures = ({
       return `Event "${title}" successfully added for ${new Date(date).toLocaleDateString("en-US", { dateStyle: "full" })}${time ? ` at ${time}` : ""}`
       },
    
-    render: ({ status, args, result }) => (
+    render: ({ status,result }) => (
       <div className="flex justify-center items-center text-sm">
         {status !== "complete" && <p>Adding event to calendar...</p>}
         {status === "complete" && (

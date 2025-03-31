@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -20,12 +19,9 @@ import {
   FileTextIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { CopilotTextarea } from "@copilotkit/react-textarea";
 import {
-  CopilotTask,
   useCopilotAction,
-  useCopilotReadable,
-  CopilotContext,
+  useCopilotReadable
 } from "@copilotkit/react-core";
 import { useCallback } from "react";
 import { useParams } from "next/navigation";
@@ -45,7 +41,6 @@ export default function MeetingPage() {
     ? params.meetingId[0]
     : params.meetingId;
   const router = useRouter();
-  const copilotContext = useContext(CopilotContext);
 
   const [meeting, setMeeting] = useState<Meeting | null>(null);
   const [notes, setNotes] = useState("");
@@ -191,7 +186,7 @@ Let me know if you need more specific information!`;
           <CardHeader>
             <CardTitle className="text-xl">Meeting Not Found</CardTitle>
             <CardDescription>
-              We couldn't locate the meeting you're looking for.
+              We couldn&apos;t locate the meeting you&apos;re looking for.
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-4">

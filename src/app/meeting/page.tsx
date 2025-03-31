@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   CardFooter,
@@ -40,7 +39,6 @@ export default function Meeting() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newMeetingName, setNewMeetingName] = useState("");
   const [meetings, setMeetings] = useState<MeetingProps[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
   const router = useRouter();
 
   // Default meetings data
@@ -93,7 +91,6 @@ export default function Meeting() {
       setMeetings(defaultMeetings);
       localStorage.setItem("meetings", JSON.stringify(defaultMeetings));
     }
-    setIsInitialized(true);
   }, []);
 
   const addMeeting = () => {

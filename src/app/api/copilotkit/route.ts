@@ -11,7 +11,7 @@ import {
   const copilotKit = new CopilotRuntime();
   
   const serviceAdapter = new GroqAdapter({
-    // @ts-ignore
+    // @ts-expect-error
     groq,
     model: "gemma2-9b-it",
   });

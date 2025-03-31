@@ -123,6 +123,7 @@ export const useTaskCopilotFeatures = ({
           new Date(taskDueDate).toISOString();
         } catch (e) {
           throw new Error("Invalid date format. Please use YYYY-MM-DD");
+          console.log(e);
         }
       }
 
@@ -292,7 +293,7 @@ export const useTaskCopilotFeatures = ({
     ],
     handler: ({ status, priority, period, tag }) => {
       let filteredTasks = [...tasks];
-      let filterCriteria: string[] = [];
+      const filterCriteria: string[] = [];
 
       // Filter by status
       if (status) {

@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Notebook, Search, Settings } from "lucide-react"
+import { Home, Inbox, Notebook } from "lucide-react";
 
 import {
   Sidebar,
@@ -9,7 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 // Menu items.
 const items = [
@@ -33,7 +33,7 @@ const items = [
     url: "/tasks",
     icon: Notebook,
   },
-]
+];
 
 export function AppSidebar() {
   return (
@@ -58,5 +58,5 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }

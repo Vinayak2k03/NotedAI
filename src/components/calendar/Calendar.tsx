@@ -14,8 +14,6 @@ import EventDialog from "./eventDialog";
 export default function Calendar() {
   const calendarRef = useRef<FullCalendar>(null);
   const { events, addEvent, deleteEvent, updateEvent } = useEvents();
-  const [showGoogleCalendarEvents, setShowGoogleCalendarEvents] =
-    useState(false);
   const user = useUser();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
@@ -73,14 +71,6 @@ export default function Calendar() {
     });
   }, [events]);
 
-  const googleCalendarSource = useMemo(
-    () => ({
-      googleCalendarId: showGoogleCalendarEvents
-        ? user?.current?.userId
-        : undefined,
-    }),
-    [showGoogleCalendarEvents, user]
-  );
 
   return (
     <div className="min-h-[500px]">
@@ -92,7 +82,6 @@ export default function Calendar() {
           process.env["NEXT_PUBLIC_GOOGLE_CALENDAR_API_KEY"]
         }
         events={[]}
-        eventSources={[googleCalendarSource]}
         weekends={true}
         eventClick={handleEventClick}
         eventDisplay="block"

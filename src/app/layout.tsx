@@ -8,7 +8,7 @@ import Navigation from "@/components/landing/navigation";
 import { ThemeProvider } from "@/components/context/theme-provider";
 import { AuthProvider } from "@/components/context/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider} from "@/components/ui/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

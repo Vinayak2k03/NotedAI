@@ -19,7 +19,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export default function signup() {
+export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const user = useUser();

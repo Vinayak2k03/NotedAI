@@ -19,7 +19,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export default function signin() {
+export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const user = useUser();
@@ -120,7 +120,7 @@ export default function signin() {
             </CardContent>
             <CardFooter className="flex justify-center">
               <p className="px-8 text-sm text-muted-foreground text-center">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
                   href="/signup"
                   className="underline underline-offset-4 hover:text-primary"
