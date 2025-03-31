@@ -25,7 +25,7 @@ export default function Navigation() {
           className="flex items-center gap-2.5 hover:opacity-90 transition-opacity"
         >
           <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-md">
-            <Logo className="size-5 text-primary" />
+            <Logo/>
           </div>
           <span className="font-semibold text-xl tracking-tight">NotedAI</span>
         </Link>
