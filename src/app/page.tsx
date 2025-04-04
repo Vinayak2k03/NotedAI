@@ -14,7 +14,7 @@ import {
   Globe,
 } from "lucide-react";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
-import Logo from "../../public/Logo";
+import Logo from "@/components/ui/Logo";
 
 export default function Home() {
   return (

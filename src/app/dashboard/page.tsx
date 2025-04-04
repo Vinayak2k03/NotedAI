@@ -3,9 +3,6 @@ import Calendar from "@/components/calendar/Calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   CalendarIcon,
-  BarChart3Icon,
-  ListTodoIcon,
-  ClockIcon,
   FileTextIcon,
   UsersIcon,
   Settings2Icon,
@@ -13,16 +10,14 @@ import {
   BellIcon,
   SearchIcon,
   PlusIcon,
-  MoreHorizontalIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 
-// Custom sidebar navigation item component with refined hover effect
+// Custom sidebar navigation item component
 function NavItem({
   href,
   icon: Icon,
@@ -80,7 +75,7 @@ export default function Dashboard() {
     <main className="flex-1 overflow-y-auto bg-black min-h-screen">
       <div className="mx-auto">
         <div className="flex">
-          {/* Refined sidebar with cleaner gradients */}
+          {/* Sidebar */}
           <aside className="fixed inset-y-0 left-0 z-10 w-64 bg-gradient-to-b from-slate-950 to-black border-r border-slate-800/70 hidden md:flex md:flex-col">
             {/* Logo and branding */}
             <div className="p-4 flex items-center gap-2.5">
@@ -92,9 +87,7 @@ export default function Dashboard() {
               </span>
             </div>
 
-         
-
-            {/* Refined navigation with improved spacing */}
+            {/* Navigation */}
             <div className="flex-1 overflow-y-auto py-6 px-3 space-y-0.5">
               {navItems.map((item) => (
                 <NavItem
@@ -108,9 +101,9 @@ export default function Dashboard() {
             </div>
           </aside>
 
-          {/* Main content area with refined nav bar */}
+          {/* Main content area */}
           <div className="md:ml-64 w-full">
-            {/* Top navigation bar with cleaner gradient */}
+            {/* Top navigation bar */}
             <div className="bg-black border-b border-slate-800/70 h-16 fixed top-0 right-0 left-0 md:left-64 z-10 flex items-center justify-between px-6">
               <div className="flex items-center gap-4">
                 <div className="relative">
@@ -138,54 +131,6 @@ export default function Dashboard() {
                     <BellIcon className="h-4 w-4" />
                     <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-white rounded-full"></span>
                   </Button>
-
-                  {/* Notification dropdown with modern styling */}
-                  {showNotifications && (
-                    <div className="absolute right-0 mt-2 w-72 bg-slate-900 rounded-md shadow-xl shadow-black/40 border border-slate-800/80 overflow-hidden z-50">
-                      <div className="p-3 flex justify-between items-center">
-                        <span className="font-medium text-sm text-white">
-                          Notifications
-                        </span>
-                        <Badge
-                          variant="secondary"
-                          className="bg-white/10 text-white text-xs border-none px-1.5 py-0"
-                        >
-                          3 new
-                        </Badge>
-                      </div>
-                      <div className="max-h-80 overflow-auto">
-                        {[1, 2, 3].map((i) => (
-                          <div
-                            key={i}
-                            className="px-3 py-2.5 border-t border-slate-800/80 hover:bg-slate-800/40 transition-colors cursor-pointer"
-                          >
-                            <div className="flex gap-3">
-                              <div className="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center flex-shrink-0">
-                                <UsersIcon className="h-4 w-4 text-white" />
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium text-slate-200">
-                                  New meeting scheduled
-                                </p>
-                                <p className="text-xs text-slate-400 mt-0.5">
-                                  30 minutes ago
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="p-2 border-t border-slate-800/80">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full text-xs justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 h-8"
-                        >
-                          View all notifications
-                        </Button>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 <Button
@@ -199,177 +144,24 @@ export default function Dashboard() {
               </div>
             </div>
 
+            {/* Main calendar section */}
             <div className="p-6 pt-24">
-              <div className="max-w-7xl">
-                <div className="space-y-6">
-                  {/* Welcome header with clean typography */}
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-slate-400 mt-1">
-                        Here&apos;s an overview of your meetings and notes
-                      </p>
+              <div className="max-w-7xl mx-auto">
+                {/* Calendar Card */}
+                <Card className="bg-gradient-to-br from-slate-900 to-slate-950 border-slate-800/50 shadow-xl shadow-black/30 hover:shadow-2xl hover:shadow-primary/5 transition-all overflow-hidden">
+                  <CardHeader className="pb-2 pt-5 px-6 flex justify-between items-center border-b border-slate-800/50">
+                    <CardTitle className="text-xl font-medium text-white flex items-center gap-2">
+                      <CalendarIcon className="h-5 w-5 text-white" />
+                      Calendar
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-5">
+                    {/* Calendar with increased height for better visibility */}
+                    <div className="h-[600px]">
+                      <Calendar />
                     </div>
-                  </div>
-
-                  {/* Stats overview with modern cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {[
-                      {
-                        title: "Upcoming Meetings",
-                        value: "4",
-                        icon: CalendarIcon,
-                      },
-                      {
-                        title: "Notes Created",
-                        value: "12",
-                        icon: ListTodoIcon,
-                      },
-                      { title: "Hours Saved", value: "8.5", icon: ClockIcon },
-                      {
-                        title: "Productivity",
-                        value: "+24%",
-                        icon: BarChart3Icon,
-                      },
-                    ].map((stat, i) => (
-                      <Card
-                        key={i}
-                        className="bg-slate-900 border-slate-800 hover:border-slate-700 transition-colors"
-                      >
-                        <CardContent className="flex justify-between items-center p-6">
-                          <div>
-                            <p className="text-sm font-medium text-slate-500">
-                              {stat.title}
-                            </p>
-                            <p className="text-2xl font-bold mt-1 text-white">
-                              {stat.value}
-                            </p>
-                          </div>
-                          <div className="p-2 rounded-md bg-white/5 text-white">
-                            <stat.icon className="h-5 w-5" />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-
-                  {/* Two column layout for Calendar and Recent meetings */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Calendar with modern styling */}
-                    <Card className="bg-slate-900 border-slate-800 hover:shadow-lg hover:shadow-black/30 transition-all">
-                      <CardHeader className="pb-2 pt-5 px-6 flex justify-between items-center border-b border-slate-800/50">
-                        <CardTitle className="text-base font-medium text-white flex items-center gap-2">
-                          <CalendarIcon className="h-4 w-4 text-white" />
-                          Calendar
-                        </CardTitle>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-800"
-                        >
-                          View All
-                        </Button>
-                      </CardHeader>
-                      <CardContent className="p-5">
-                        <Calendar />
-                      </CardContent>
-                    </Card>
-
-                    {/* Recent meetings with modern styling */}
-                    <Card className="bg-slate-900 border-slate-800 hover:shadow-lg hover:shadow-black/30 transition-all">
-                      <CardHeader className="pb-2 pt-5 px-6 flex justify-between items-center border-b border-slate-800/50">
-                        <CardTitle className="text-base font-medium text-white flex items-center gap-2">
-                          <UsersIcon className="h-4 w-4 text-white" />
-                          Recent Meetings
-                        </CardTitle>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-800"
-                        >
-                          View All
-                        </Button>
-                      </CardHeader>
-                      <CardContent className="p-0">
-                        <div className="divide-y divide-slate-800/50">
-                          {[1, 2, 3].map((meeting) => (
-                            <div
-                              key={meeting}
-                              className="flex justify-between items-center px-6 py-4 hover:bg-slate-800/20 transition-colors"
-                            >
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-md bg-white/5 flex items-center justify-center text-white font-medium border border-white/10">
-                                  M{meeting}
-                                </div>
-                                <div>
-                                  <p className="font-medium text-slate-200">
-                                    Team Sync Meeting {meeting}
-                                  </p>
-                                  <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-1">
-                                    <ClockIcon className="h-3 w-3" />
-                                    Yesterday at 2:30 PM
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Badge className="bg-slate-800 text-slate-300 border-slate-700 text-xs">
-                                  Notes
-                                </Badge>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="rounded-md h-8 w-8 p-0 text-slate-400 hover:text-slate-200 hover:bg-slate-800"
-                                >
-                                  <MoreHorizontalIcon className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="px-6 py-3 border-t border-slate-800/50">
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-center text-slate-300 hover:text-white hover:bg-white/5 text-sm h-9"
-                          >
-                            View all meetings
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  {/* Quick Actions Section */}
-                  <Card className="bg-slate-900 border-slate-800 hover:shadow-lg hover:shadow-black/30 transition-all">
-                    <CardHeader className="pb-2 pt-5 px-6 flex justify-between items-center border-b border-slate-800/50">
-                      <CardTitle className="text-base font-medium text-white flex items-center gap-2">
-                        <ListTodoIcon className="h-4 w-4 text-white" />
-                        Quick Actions
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {[
-                          { title: "Create Meeting", icon: UsersIcon },
-                          { title: "New Note", icon: FileTextIcon },
-                          { title: "Schedule Event", icon: CalendarIcon },
-                        ].map((action, i) => (
-                          <Button
-                            key={i}
-                            variant="outline"
-                            className="h-20 flex-col bg-slate-800/30 border-slate-700/50 hover:border-white/20 hover:bg-slate-800/70 text-slate-300"
-                          >
-                            <div className="h-8 w-8 rounded-md bg-white/5 flex items-center justify-center mb-1.5">
-                              <action.icon className="h-4 w-4 text-white" />
-                            </div>
-                            <span className="text-sm font-medium">
-                              {action.title}
-                            </span>
-                          </Button>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>

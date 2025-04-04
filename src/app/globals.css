@@ -295,3 +295,99 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+
+/* Calendar styling improvements */
+.calendar-container .fc {
+  --fc-border-color: rgba(51, 65, 85, 0.2);
+  --fc-today-bg-color: rgba(59, 130, 246, 0.08);
+  --fc-event-bg-color: rgba(59, 130, 246, 0.8);
+  --fc-event-border-color: rgba(59, 130, 246, 0.8);
+  --fc-event-text-color: #fff;
+  --fc-page-bg-color: transparent;
+  font-family: inherit;
+}
+
+/* Header styling */
+.calendar-container .fc .fc-col-header-cell {
+  padding: 12px 0;
+  background-color: rgba(15, 23, 42, 0.3);
+}
+
+.calendar-container .fc .fc-col-header-cell-cushion {
+  color: #94a3b8;
+  font-weight: 500;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding: 8px;
+}
+
+/* Days styling */
+.calendar-container .fc .fc-daygrid-day-top {
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.calendar-container .fc .fc-daygrid-day-number {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 4px;
+}
+
+/* Today's date styling */
+.calendar-container .fc .fc-day-today .fc-daygrid-day-number {
+  background-color: #3b82f6;
+  color: white;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Event styling */
+.calendar-container .fc .fc-event {
+  border-radius: 4px;
+  border: none;
+  padding: 2px 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.calendar-container .fc .fc-event:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Other month days - slightly dimmed */
+.calendar-container .fc .fc-day-other .fc-daygrid-day-top {
+  opacity: 0.5;
+}
+
+/* Hide more link and add a custom style */
+.calendar-container .fc .fc-daygrid-more-link {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 4px;
+  padding: 1px 4px;
+  margin: 2px 0;
+  font-weight: 500;
+}
+
+/* Weekend days slightly different background */
+.calendar-container .fc .fc-day-sat,
+.calendar-container .fc .fc-day-sun {
+  background-color: rgba(15, 23, 42, 0.3);
+}
+
+/* Event dot in month view */
+.calendar-container .fc .fc-daygrid-event-dot {
+  border-color: currentColor;
+}
