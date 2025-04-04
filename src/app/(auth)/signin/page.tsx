@@ -5,11 +5,7 @@ import { BackgroundLines } from "@/components/ui/background-lines";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  CardContent
 } from "@/components/ui/card";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
@@ -188,7 +184,7 @@ export default function SignIn() {
           {/* Sign up link */}
           <div className="mt-6 text-center text-sm">
             <span className="text-muted-foreground">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
             </span>
             <Link
               href="/signup"
