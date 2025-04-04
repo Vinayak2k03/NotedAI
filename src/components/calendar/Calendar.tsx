@@ -23,7 +23,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { formatDate } from "@/lib/utils";
 
 // New AllEventsDialog component that shows only current month events
 function AllEventsDialog({

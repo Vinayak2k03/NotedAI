@@ -15,8 +15,11 @@ import {
 } from "lucide-react";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import Logo from "@/components/ui/Logo";
+import { useUser } from "@/components/context/auth-provider";
 
 export default function Home() {
+  const { current: currentUser } = useUser();
+
   return (
     <div className="w-full">
       {/* Hero section with enhanced visuals */}
@@ -53,16 +56,30 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-5 justify-center mt-14 mb-24">
-            <Button
-              asChild
-              size="lg"
-              className="px-8 py-7 text-base font-medium rounded-xl transition-all hover:scale-105 group shadow-lg shadow-primary/10"
-            >
-              <Link href="/dashboard" className="flex items-center">
-                Go to Dashboard
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
+            {currentUser ? (
+              <Button
+                asChild
+                size="lg"
+                className="px-8 py-7 text-base font-medium rounded-xl transition-all hover:scale-105 group shadow-lg shadow-primary/10"
+              >
+                <Link href="/dashboard" className="flex items-center">
+                  Go to Dashboard
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
+            ) : (
+              <Button
+                asChild
+                size="lg"
+                className="px-8 py-7 text-base font-medium rounded-xl transition-all hover:scale-105 group shadow-lg shadow-primary/10"
+              >
+                <Link href="/signup" className="flex items-center">
+                  Get Started
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
+            )}
+
             <Button
               asChild
               variant="outline"
@@ -168,9 +185,9 @@ export default function Home() {
               size="lg"
               className="px-10 py-7 text-lg font-medium rounded-xl transition-all hover:scale-105 shadow-lg shadow-primary/20"
             >
-              <Link href="/signup" className="flex items-center">
-                Get Started for Free
-                <ArrowRight className="ml-2 h-5 w-5" />
+              <Link href={currentUser?"/dashboard":"/signup"} className="flex items-center">
+              {currentUser ? "Go to Dashboard" : "Get Started for Free"}
+              <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
           </div>
@@ -185,7 +202,7 @@ export default function Home() {
             <div className="md:col-span-2">
               <div className="flex items-center gap-2.5 mb-6">
                 <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-md">
-                  <Logo/>
+                  <Logo />
                 </div>
                 <span className="font-bold text-xl text-white">NotedAI</span>
               </div>
