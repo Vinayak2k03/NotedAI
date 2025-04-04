@@ -258,7 +258,7 @@ export default function Meeting() {
                 Create your first meeting to get started with organizing notes
                 and summaries.
               </p>
-              <Button onClick={addMeeting} className="flex items-center gap-2">
+              <Button onClick={()=>setIsDialogOpen(true)} className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 Create Meeting
               </Button>
