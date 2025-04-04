@@ -5,7 +5,6 @@ import {
   CalendarIcon,
   FileTextIcon,
   UsersIcon,
-  Settings2Icon,
   LayoutDashboardIcon,
   BellIcon,
   SearchIcon,
@@ -64,8 +63,7 @@ export default function Dashboard() {
   const navItems = [
     { href: "/dashboard", icon: LayoutDashboardIcon, label: "Dashboard" },
     { href: "/meeting", icon: UsersIcon, label: "Meetings" },
-    { href: "/tasks", icon: FileTextIcon, label: "Tasks" },
-    { href: "/settings", icon: Settings2Icon, label: "Settings" },
+    { href: "/tasks", icon: FileTextIcon, label: "Tasks" }
   ];
 
   // State for notification dropdown
