@@ -27,7 +27,6 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowLeftIcon } from "lucide-react";
-import { useTheme } from "next-themes";
 
 interface MeetingProps {
   id: string;
@@ -41,8 +40,6 @@ export default function Meeting() {
   const [newMeetingName, setNewMeetingName] = useState("");
   const [meetings, setMeetings] = useState<MeetingProps[]>([]);
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
-
 
   // Default meetings data
   const defaultMeetings = [

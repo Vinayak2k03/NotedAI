@@ -16,11 +16,9 @@ import {
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import Logo from "@/components/ui/Logo";
 import { useUser } from "@/components/context/auth-provider";
-import { useEffect, useState } from "react";
 
 export default function Home() {
   const { current: currentUser } = useUser();
-
 
   return (
     <div className="w-full">
