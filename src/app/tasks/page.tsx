@@ -35,9 +35,12 @@ import {
   CalendarCheck,
   AlertCircle,
   ArrowLeftIcon,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTaskCopilotFeatures } from "@/hooks/useTaskCopilotFeatures";
+import { useTheme } from "next-themes";
 
 interface Task {
   id: string;
@@ -76,6 +79,13 @@ export default function Tasks() {
   const [newTagInput, setNewTagInput] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Load tasks from localStorage on component mount
   useEffect(() => {
@@ -131,19 +141,6 @@ export default function Tasks() {
 
       // First create a copy of the previous tasks to avoid state issues
       setTasks((prevTasks) => [...prevTasks, task]);
-
-      // Only reset form if coming from the dialog, not from Copilot
-      // if (!taskData) {
-      //   setNewTask({
-      //     title: "",
-      //     description: "",
-      //     dueDate: "",
-      //     completed: false,
-      //     priority: "medium",
-      //     tags: [],
-      //   });
-      //   setIsDialogOpen(false);
-      // }
 
       setNewTask({
         title: "",
@@ -263,53 +260,60 @@ export default function Tasks() {
   const getPriorityStyles = (priority: string, completed: boolean) => {
     if (completed) {
       return {
-        borderColor: "border-green-800/20",
-        bgColor: "bg-green-900/10",
-        accentColor: "bg-green-800/20",
-        textColor: "text-green-300",
-        iconColor: "text-green-400/60",
+        // Light mode
+        borderColor: "border-green-400/30 dark:border-green-800/20",
+        bgColor: "bg-green-100/30 dark:bg-green-900/10",
+        accentColor: "bg-green-400/20 dark:bg-green-800/20",
+        textColor: "text-green-700 dark:text-green-300",
+        iconColor: "text-green-600/60 dark:text-green-400/60",
         badgeVariant: "outline" as const,
-        badgeTextColor: "text-green-300",
+        badgeTextColor: "text-green-700 dark:text-green-300",
       };
     }
 
     switch (priority) {
       case "high":
         return {
-          borderColor: "border-red-900/30",
-          bgColor: "bg-red-950/10",
-          accentColor: "bg-red-900/20",
-          textColor: "text-red-400",
-          iconColor: "text-red-500/70",
+          // Light mode
+          borderColor: "border-red-400/30 dark:border-red-900/30",
+          bgColor: "bg-red-100/20 dark:bg-red-950/10",
+          accentColor: "bg-red-400/20 dark:bg-red-900/20",
+          textColor: "text-red-600 dark:text-red-400",
+          iconColor: "text-red-600/70 dark:text-red-500/70",
           badgeVariant: "destructive" as const,
           badgeTextColor: "text-red-50",
         };
       case "medium":
         return {
-          borderColor: "border-orange-900/20",
-          bgColor: "bg-amber-950/5",
-          accentColor: "bg-amber-900/20",
-          textColor: "text-amber-400",
-          iconColor: "text-amber-500/70",
+          borderColor: "border-amber-400/20 dark:border-orange-900/20",
+          bgColor: "bg-amber-100/20 dark:bg-amber-950/5",
+          accentColor: "bg-amber-400/20 dark:bg-amber-900/20",
+          textColor: "text-amber-600 dark:text-amber-400",
+          iconColor: "text-amber-600/70 dark:text-amber-500/70",
           badgeVariant: "default" as const,
           badgeTextColor: "text-amber-50",
         };
       default:
         return {
-          borderColor: "border-blue-900/20",
-          bgColor: "bg-blue-950/5",
-          accentColor: "bg-blue-900/20",
-          textColor: "text-blue-400",
-          iconColor: "text-blue-500/60",
+          borderColor: "border-blue-400/20 dark:border-blue-900/20",
+          bgColor: "bg-blue-100/20 dark:bg-blue-950/5",
+          accentColor: "bg-blue-400/20 dark:bg-blue-900/20",
+          textColor: "text-blue-600 dark:text-blue-400",
+          iconColor: "text-blue-600/60 dark:text-blue-500/60",
           badgeVariant: "outline" as const,
-          badgeTextColor: "text-blue-300",
+          badgeTextColor: "text-blue-600 dark:text-blue-300",
         };
     }
   };
 
+  // Toggle theme function
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
   return (
     <main className="mt-20 p-6 container mx-auto max-w-7xl">
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 -mx-6 px-6 py-6 mb-8 shadow-md">
+      <div className="bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 -mx-6 px-6 py-6 mb-8 shadow-md transition-colors">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-4">
@@ -317,18 +321,18 @@ export default function Tasks() {
                 variant="outline"
                 size="icon"
                 onClick={() => router.push("/dashboard")}
-                className="rounded-full w-10 h-10 bg-white/10 border-transparent backdrop-blur-sm hover:bg-white/20"
+                className="rounded-full w-10 h-10 bg-background/50 dark:bg-white/10 border-border dark:border-transparent backdrop-blur-sm hover:bg-accent/50 dark:hover:bg-white/20 transition-all"
               >
-                <ArrowLeftIcon className="h-5 w-5" />
+                <ArrowLeftIcon className="h-5 w-5 text-foreground dark:text-white" />
               </Button>
-              <h1 className="text-3xl font-bold text-white tracking-tight">
+              <h1 className="text-3xl font-bold text-foreground dark:text-white tracking-tight">
                 Tasks
               </h1>
             </div>
 
-            <p className="text-white/70 mt-1">
+            <p className="text-muted-foreground dark:text-white/70 mt-1">
               You have{" "}
-              <span className="font-medium text-white">
+              <span className="font-medium text-foreground dark:text-white">
                 {tasks.filter((task) => !task.completed).length} active tasks
               </span>
               .
@@ -337,22 +341,22 @@ export default function Tasks() {
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-white/15 text-white border-none hover:bg-white/25 transition-all">
+              <Button className="bg-primary/90 dark:bg-white/15 text-primary-foreground dark:text-white border-none hover:bg-primary dark:hover:bg-white/25 transition-all">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Task
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md bg-background dark:bg-slate-900 border-border dark:border-slate-700/50">
               <DialogHeader>
-                <DialogTitle>Create New Task</DialogTitle>
-                <DialogDescription>
+                <DialogTitle className="text-foreground dark:text-white">Create New Task</DialogTitle>
+                <DialogDescription className="text-muted-foreground dark:text-slate-400">
                   Add a new task to your list
                 </DialogDescription>
               </DialogHeader>
 
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Title</Label>
+                  <Label htmlFor="title" className="text-foreground dark:text-white">Title</Label>
                   <Input
                     id="title"
                     placeholder="Task title"
@@ -360,11 +364,12 @@ export default function Tasks() {
                     onChange={(e) =>
                       setNewTask({ ...newTask, title: e.target.value })
                     }
+                    className="bg-background dark:bg-slate-800 text-foreground dark:text-white border-input dark:border-slate-700"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description" className="text-foreground dark:text-white">Description</Label>
                   <Textarea
                     id="description"
                     placeholder="Task details"
@@ -373,12 +378,13 @@ export default function Tasks() {
                       setNewTask({ ...newTask, description: e.target.value })
                     }
                     rows={3}
+                    className="bg-background dark:bg-slate-800 text-foreground dark:text-white border-input dark:border-slate-700"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="dueDate">Due Date</Label>
+                    <Label htmlFor="dueDate" className="text-foreground dark:text-white">Due Date</Label>
                     <div className="flex">
                       <Input
                         id="dueDate"
@@ -387,13 +393,13 @@ export default function Tasks() {
                         onChange={(e) =>
                           setNewTask({ ...newTask, dueDate: e.target.value })
                         }
-                        className="w-full"
+                        className="w-full bg-background dark:bg-slate-800 text-foreground dark:text-white border-input dark:border-slate-700"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="priority">Priority</Label>
+                    <Label htmlFor="priority" className="text-foreground dark:text-white">Priority</Label>
                     <Select
                       value={newTask.priority || "medium"}
                       onValueChange={(value) =>
@@ -403,10 +409,10 @@ export default function Tasks() {
                         })
                       }
                     >
-                      <SelectTrigger id="priority">
+                      <SelectTrigger id="priority" className="bg-background dark:bg-slate-800 text-foreground dark:text-white border-input dark:border-slate-700">
                         <SelectValue placeholder="Priority" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-background dark:bg-slate-800 text-foreground dark:text-white border-input dark:border-slate-700">
                         <SelectItem value="low">Low</SelectItem>
                         <SelectItem value="medium">Medium</SelectItem>
                         <SelectItem value="high">High</SelectItem>
@@ -416,13 +422,13 @@ export default function Tasks() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Tags</Label>
+                  <Label className="text-foreground dark:text-white">Tags</Label>
                   <div className="flex gap-2 flex-wrap mb-2">
                     {(newTask.tags || []).map((tag) => (
                       <Badge
                         key={tag}
                         variant="secondary"
-                        className="px-2 py-1"
+                        className="px-2 py-1 bg-accent/50 dark:bg-slate-700"
                       >
                         {tag}
                         <button
@@ -445,13 +451,14 @@ export default function Tasks() {
                           addTagToNewTask();
                         }
                       }}
-                      className="flex-1"
+                      className="flex-1 bg-background dark:bg-slate-800 text-foreground dark:text-white border-input dark:border-slate-700"
                     />
                     <Button
                       onClick={addTagToNewTask}
                       type="button"
                       size="sm"
                       variant="outline"
+                      className="border-input dark:border-slate-700 text-foreground dark:text-white"
                     >
                       Add
                     </Button>
@@ -463,6 +470,7 @@ export default function Tasks() {
                 <Button
                   variant="outline"
                   onClick={() => setIsDialogOpen(false)}
+                  className="border-input dark:border-slate-700 text-foreground dark:text-white"
                 >
                   Cancel
                 </Button>
@@ -491,7 +499,7 @@ export default function Tasks() {
                     }
                   }}
                   disabled={isLoading || !newTask.title?.trim()}
-                  className=""
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   {isLoading ? "Creating..." : "Create Task"}
                 </Button>
@@ -504,20 +512,20 @@ export default function Tasks() {
       <div className="mb-8">
         <div className="flex flex-col md:flex-row gap-4 md:items-center mb-4">
           <div className="flex items-center space-x-2">
-            <div className="bg-slate-800/50 p-1.5 rounded-md">
-              <Filter className="h-4 w-4 text-slate-400" />
+            <div className="bg-accent/70 dark:bg-slate-800/50 p-1.5 rounded-md">
+              <Filter className="h-4 w-4 text-muted-foreground dark:text-slate-400" />
             </div>
-            <span className="text-sm text-slate-400 font-medium">Filter:</span>
+            <span className="text-sm text-muted-foreground dark:text-slate-400 font-medium">Filter:</span>
             <Select
               value={filter}
               onValueChange={(value: "all" | "active" | "completed") =>
                 setFilter(value)
               }
             >
-              <SelectTrigger className="h-8 w-32 bg-slate-900/50 border-slate-700/50">
+              <SelectTrigger className="h-8 w-32 bg-background/50 dark:bg-slate-900/50 border-input/50 dark:border-slate-700/50">
                 <SelectValue placeholder="Filter" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-background dark:bg-slate-900 border-input dark:border-slate-700">
                 <SelectItem value="all">All</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
@@ -526,20 +534,20 @@ export default function Tasks() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <div className="bg-slate-800/50 p-1.5 rounded-md">
-              <ArrowUpDown className="h-4 w-4 text-slate-400" />
+            <div className="bg-accent/70 dark:bg-slate-800/50 p-1.5 rounded-md">
+              <ArrowUpDown className="h-4 w-4 text-muted-foreground dark:text-slate-400" />
             </div>
-            <span className="text-sm text-slate-400 font-medium">Sort by:</span>
+            <span className="text-sm text-muted-foreground dark:text-slate-400 font-medium">Sort by:</span>
             <Select
               value={sortBy}
               onValueChange={(value: "dueDate" | "priority" | "title") =>
                 setSortBy(value)
               }
             >
-              <SelectTrigger className="h-8 w-32 bg-slate-900/50 border-slate-700/50">
+              <SelectTrigger className="h-8 w-32 bg-background/50 dark:bg-slate-900/50 border-input/50 dark:border-slate-700/50">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-background dark:bg-slate-900 border-input dark:border-slate-700">
                 <SelectItem value="dueDate">Due Date</SelectItem>
                 <SelectItem value="priority">Priority</SelectItem>
                 <SelectItem value="title">Title</SelectItem>
@@ -549,20 +557,20 @@ export default function Tasks() {
 
           {allTags.length > 0 && (
             <div className="flex items-center space-x-2">
-              <div className="bg-slate-800/50 p-1.5 rounded-md">
-                <Tag className="h-4 w-4 text-slate-400" />
+              <div className="bg-accent/70 dark:bg-slate-800/50 p-1.5 rounded-md">
+                <Tag className="h-4 w-4 text-muted-foreground dark:text-slate-400" />
               </div>
-              <span className="text-sm text-slate-400 font-medium">Tag:</span>
+              <span className="text-sm text-muted-foreground dark:text-slate-400 font-medium">Tag:</span>
               <Select
                 value={tagFilter || "all_tags"}
                 onValueChange={(value) =>
                   setTagFilter(value === "all_tags" ? null : value)
                 }
               >
-                <SelectTrigger className="h-8 w-32 bg-slate-900/50 border-slate-700/50">
+                <SelectTrigger className="h-8 w-32 bg-background/50 dark:bg-slate-900/50 border-input/50 dark:border-slate-700/50">
                   <SelectValue placeholder="Tag filter" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background dark:bg-slate-900 border-input dark:border-slate-700">
                   <SelectItem value="all_tags">All Tags</SelectItem>
                   {allTags.map((tag) => (
                     <SelectItem key={tag} value={tag}>
@@ -584,7 +592,8 @@ export default function Tasks() {
             return (
               <Card
                 key={task.id}
-                className={`group border-0 shadow-md hover:shadow-lg transition-all overflow-hidden bg-gradient-to-b from-slate-900/95 to-slate-950/90 backdrop-blur-sm ${
+                className={`group border border-border/50 dark:border-0 shadow-md hover:shadow-lg transition-all overflow-hidden 
+                           bg-card/90 dark:bg-gradient-to-b dark:from-slate-900/95 dark:to-slate-950/90 backdrop-blur-sm ${
                   task.completed ? "opacity-80" : ""
                 }`}
               >
@@ -600,7 +609,7 @@ export default function Tasks() {
                       <div
                         className={`p-0.5 rounded-full ${
                           task.completed
-                            ? "bg-green-900/30"
+                            ? "bg-green-200/50 dark:bg-green-900/30"
                             : styles.accentColor
                         }`}
                       >
@@ -609,12 +618,12 @@ export default function Tasks() {
                           onCheckedChange={() => toggleTaskCompletion(task.id)}
                           className={`h-5 w-5 rounded-full border-0 ${
                             task.completed
-                              ? "text-green-400 data-[state=checked]:bg-green-500/30"
+                              ? "text-green-600 dark:text-green-400 data-[state=checked]:bg-green-500/30"
                               : task.priority === "high"
-                              ? "text-red-400 data-[state=checked]:bg-red-500/30"
+                              ? "text-red-600 dark:text-red-400 data-[state=checked]:bg-red-500/30"
                               : task.priority === "medium"
-                              ? "text-orange-400 data-[state=checked]:bg-orange-500/30"
-                              : "text-blue-400 data-[state=checked]:bg-blue-500/30"
+                              ? "text-orange-600 dark:text-orange-400 data-[state=checked]:bg-orange-500/30"
+                              : "text-blue-600 dark:text-blue-400 data-[state=checked]:bg-blue-500/30"
                           }`}
                         />
                       </div>
@@ -622,8 +631,8 @@ export default function Tasks() {
                         <h3
                           className={`text-base font-medium leading-snug truncate ${
                             task.completed
-                              ? "line-through text-slate-400/80"
-                              : "text-slate-50"
+                              ? "line-through text-muted-foreground/70 dark:text-slate-400/80"
+                              : "text-foreground dark:text-slate-50"
                           }`}
                         >
                           {task.title}
@@ -632,8 +641,8 @@ export default function Tasks() {
                           <p
                             className={`mt-1 text-sm leading-relaxed line-clamp-2 ${
                               task.completed
-                                ? "text-slate-500/70"
-                                : "text-slate-300"
+                                ? "text-muted-foreground/60 dark:text-slate-500/70"
+                                : "text-muted-foreground dark:text-slate-300"
                             }`}
                           >
                             {task.description}
@@ -645,7 +654,7 @@ export default function Tasks() {
                       variant="ghost"
                       size="sm"
                       onClick={() => deleteTask(task.id)}
-                      className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-full text-slate-400 hover:text-red-400 hover:bg-red-900/20"
+                      className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-full text-muted-foreground dark:text-slate-400 hover:text-destructive dark:hover:text-red-400 hover:bg-destructive/10 dark:hover:bg-red-900/20"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -654,7 +663,7 @@ export default function Tasks() {
                   {/* Due date and priority badge */}
                   <div className="flex justify-between items-center mt-4 text-sm">
                     <div
-                      className={`flex items-center gap-2 ${styles.iconColor} bg-slate-800/60 px-2.5 py-1 rounded-full`}
+                      className={`flex items-center gap-2 ${styles.iconColor} bg-accent/40 dark:bg-slate-800/60 px-2.5 py-1 rounded-full`}
                     >
                       <CalendarCheck className="h-3.5 w-3.5" />
                       <span className={`${styles.textColor}`}>
@@ -673,13 +682,13 @@ export default function Tasks() {
 
                   {/* Tags at bottom */}
                   {task.tags && task.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-slate-700/30">
+                    <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-border/30 dark:border-slate-700/30">
                       {task.tags.map((tag) => (
                         <Badge
                           key={tag}
                           variant="secondary"
-                          className={`text-xs px-2.5 py-0.5 rounded-full bg-slate-800/60 hover:bg-slate-700/70 transition-colors ${
-                            tagFilter === tag ? "ring-1 ring-blue-400" : ""
+                          className={`text-xs px-2.5 py-0.5 rounded-full bg-accent/50 hover:bg-accent/70 dark:bg-slate-800/60 dark:hover:bg-slate-700/70 transition-colors ${
+                            tagFilter === tag ? "ring-1 ring-primary dark:ring-blue-400" : ""
                           }`}
                         >
                           {tag}
@@ -691,23 +700,23 @@ export default function Tasks() {
 
                 {/* Completion overlay - lighter */}
                 {task.completed && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-900/5 to-green-900/10 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-green-500/10 dark:from-green-900/5 dark:to-green-900/10 pointer-events-none" />
                 )}
               </Card>
             );
           })}
         </div>
       ) : (
-        <div className="text-center py-16 px-4 rounded-lg bg-slate-900/20 border border-slate-800/50">
-          <div className="bg-slate-800/50 inline-flex rounded-full p-4 mb-4">
+        <div className="text-center py-16 px-4 rounded-lg bg-accent/20 dark:bg-slate-900/20 border border-border/50 dark:border-slate-800/50">
+          <div className="bg-accent/50 dark:bg-slate-800/50 inline-flex rounded-full p-4 mb-4">
             {filter === "completed" ? (
-              <CheckCircle className="h-8 w-8 text-slate-400" />
+              <CheckCircle className="h-8 w-8 text-muted-foreground dark:text-slate-400" />
             ) : (
-              <AlertCircle className="h-8 w-8 text-slate-400" />
+              <AlertCircle className="h-8 w-8 text-muted-foreground dark:text-slate-400" />
             )}
           </div>
-          <h3 className="text-xl font-medium text-white">No tasks found</h3>
-          <p className="text-slate-400 mt-2 max-w-md mx-auto">
+          <h3 className="text-xl font-medium text-foreground dark:text-white">No tasks found</h3>
+          <p className="text-muted-foreground dark:text-slate-400 mt-2 max-w-md mx-auto">
             {filter !== "all"
               ? `No ${filter} tasks to display. Try changing your filters.`
               : "You don't have any tasks yet. Click 'Add Task' to create one."}
@@ -715,7 +724,7 @@ export default function Tasks() {
           {filter === "all" && tasks.length === 0 && (
             <Button
               onClick={() => setIsDialogOpen(true)}
-              className="mt-4 bg-white/10 hover:bg-white/20 text-white"
+              className="mt-4 bg-primary/80 hover:bg-primary text-primary-foreground dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
             >
               <Plus className="h-4 w-4 mr-2" />
               Create Your First Task
