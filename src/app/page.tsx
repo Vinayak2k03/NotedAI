@@ -24,7 +24,7 @@ export default function Home() {
     <div className="w-full">
       {/* Hero section with enhanced visuals */}
       <div className="min-h-screen w-full flex flex-col justify-center items-center bg-background dark:bg-black/[0.96] antialiased bg-grid-slate-200/[0.02] dark:bg-grid-white/[0.03] relative overflow-hidden">
-        <Spotlight mode="transparent" />
+        <Spotlight/>
         <div className="p-4 max-w-7xl mx-auto relative z-10 w-full pt-32 md:pt-40 lg:pt-32 text-center">
           <div className="mb-10 md:mb-12 inline-block p-2.5 px-4 rounded-full backdrop-blur-md 
                         bg-gradient-to-r from-card/90 via-background/80 to-card/90 dark:from-zinc-900/90 dark:via-black/80 dark:to-zinc-900/90 
