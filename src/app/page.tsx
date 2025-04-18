@@ -11,27 +11,16 @@ import {
   Github,
   Twitter,
   Mail,
-  Globe,
-  Menu,
-  MoonStar,
-  Sun,
+  Globe
 } from "lucide-react";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import Logo from "@/components/ui/Logo";
 import { useUser } from "@/components/context/auth-provider";
-import { ThemeMode } from "@/components/theme-mode-util";
-import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const { current: currentUser } = useUser();
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <div className="w-full">

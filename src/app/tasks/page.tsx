@@ -34,13 +34,10 @@ import {
   X,
   CalendarCheck,
   AlertCircle,
-  ArrowLeftIcon,
-  Sun,
-  Moon,
+  ArrowLeftIcon
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTaskCopilotFeatures } from "@/hooks/useTaskCopilotFeatures";
-import { useTheme } from "next-themes";
 
 interface Task {
   id: string;
@@ -79,13 +76,7 @@ export default function Tasks() {
   const [newTagInput, setNewTagInput] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Load tasks from localStorage on component mount
   useEffect(() => {
@@ -306,10 +297,6 @@ export default function Tasks() {
     }
   };
 
-  // Toggle theme function
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
 
   return (
     <main className="mt-20 p-6 container mx-auto max-w-7xl">

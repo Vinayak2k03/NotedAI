@@ -12,9 +12,7 @@ import {
   Plus,
   CalendarCheck,
   Clock,
-  ArrowUpRight,
-  Sun,
-  Moon,
+  ArrowUpRight
 } from "lucide-react";
 import {
   Dialog,
@@ -42,14 +40,9 @@ export default function Meeting() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newMeetingName, setNewMeetingName] = useState("");
   const [meetings, setMeetings] = useState<MeetingProps[]>([]);
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const { theme, setTheme } = useTheme();
 
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Default meetings data
   const defaultMeetings = [
@@ -132,11 +125,6 @@ export default function Meeting() {
 
   // Get today's date for highlighting
   const today = new Date().toDateString();
-
-  // Toggle theme function
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
 
   return (
     <main className="mt-20 container mx-auto max-w-7xl">
