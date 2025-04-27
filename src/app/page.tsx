@@ -9,9 +9,6 @@ import {
   ArrowRight,
   ChevronDown,
   Github,
-  Twitter,
-  Mail,
-  Globe,
 } from "lucide-react";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import Logo from "@/components/ui/Logo";
