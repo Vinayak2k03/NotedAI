@@ -9,7 +9,7 @@ export async function generateSummary(
   meetingName: string,
   meetingDate: string
 ) {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" }); // Use "gemini-1.0-pro" if you don't have access to 1.5
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Use "gemini-1.0-pro" if you don't have access to 1.5
 
   const prompt = `
 You are an expert meeting notes summarizer. Based on the following meeting notes, 
