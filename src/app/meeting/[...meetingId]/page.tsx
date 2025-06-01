@@ -47,6 +47,7 @@ export default function MeetingPage() {
   const [summary, setSummary] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const [summaryMethod, setSummaryMethod] = useState<'ai' | 'fallback' | 'rate-limited' | null>(null);
 
   // Load meeting data and notes
   useEffect(() => {
@@ -325,82 +326,206 @@ Let me know if you need more specific information!`;
 
               {/* Always show the Generate Summary button regardless of summary status */}
               <div className="pb-1 mt-auto">
-                <Button
-                  onClick={async () => {
-                    setIsGeneratingSummary(true);
-                    try {
-                      if (!notes || notes.trim() === "") {
-                        return;
-                      }
 
-                      // Call your new API route
-                      const response = await fetch("/api/generate-summary", {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                          notes,
-                          meetingName: meeting?.name,
-                          meetingDate: new Date(
-                            meeting?.date || ""
-                          ).toLocaleDateString(),
-                        }),
-                      });
+// Add this button handler
+<Button
+  onClick={async () => {
+    setIsGeneratingSummary(true);
+    try {
+      if (!notes || notes.trim() === "") {
+        toast.error("No notes available", {
+          description: "Please add some notes before generating a summary.",
+        });
+        return;
+      }
 
-                      if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(
-                          errorData.error || "Failed to generate summary"
-                        );
-                      }
+      // Show loading toast
+      const loadingToast = toast.loading("Generating summary...", {
+        description: "This may take up to 30 seconds",
+      });
 
-                      const data = await response.json();
-                      setSummary(data.summary);
+      // Set a client-side timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+      }, 40000); // 40 second client timeout
 
-                      // Save after state update
-                      setTimeout(() => {
-                        saveMeetingNotes();
-                      }, 10);
-                    } catch (error) {
-                      console.error("Error generating summary:", error);
-                    } finally {
-                      setIsGeneratingSummary(false);
-                    }
-                  }}
-                  variant="outline"
-                  size="sm"
-                  disabled={isGeneratingSummary || !notes.trim()}
-                  className="w-full border-amber-200 hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 dark:border-amber-900/40"
-                >
-                  {isGeneratingSummary ? (
-                    <span className="flex items-center gap-2">
-                      <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Generating...
-                    </span>
-                  ) : (
-                    "Generate Summary"
-                  )}
-                </Button>
+      const response = await fetch("/api/generate-summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          notes: notes.substring(0, 10000), // Limit notes length
+          meetingName: meeting?.name,
+          meetingDate: new Date(meeting?.date || "").toLocaleDateString(),
+        }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+      toast.dismiss(loadingToast);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to generate summary");
+      }
+
+      const data = await response.json();
+      setSummary(data.summary);
+      setSummaryMethod(data.method);
+
+      // Show appropriate toast based on method used
+      if (data.method === 'ai') {
+        toast.success("AI summary generated successfully!");
+      } else if (data.method === 'rate-limited') {
+        toast.warning("Rate limit reached", {
+          description: "Generated fallback summary. Try again later for AI summary.",
+        });
+      } else if (data.method === 'fallback') {
+        toast.info("Fallback summary generated", {
+          description: "AI not available, but we created a summary for you.",
+        });
+      }
+
+      setTimeout(() => {
+        saveMeetingNotes();
+      }, 10);
+
+    } catch (error: any) {
+      console.error("Error generating summary:", error);
+      
+      if (error.name === 'AbortError') {
+        toast.error("Request timed out", {
+          description: "Summary generation took too long. Try with shorter notes.",
+        });
+      } else {
+        toast.error("Failed to generate summary", {
+          description: error.message || "Please try again later.",
+        });
+      }
+    } finally {
+      setIsGeneratingSummary(false);
+    }
+  }}
+  variant="outline"
+  size="sm"
+  disabled={isGeneratingSummary || !notes.trim()}
+  className="w-full bg-primary/10 hover:bg-primary/20 border-primary/30 text-primary dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
+>
+  {isGeneratingSummary ? (
+    <>
+      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary dark:border-white mr-2"></div>
+      Generating...
+    </>
+  ) : (
+    <>
+      <MessageSquare className="h-4 w-4 mr-2" />
+      {summary ? "Regenerate Summary" : "Generate Summary"}
+    </>
+  )}
+</Button>// Update the generate summary button handler
+
+const [summaryMethod, setSummaryMethod] = useState<'ai' | 'fallback' | 'rate-limited' | null>(null);
+
+// Add this button handler
+<Button
+  onClick={async () => {
+    setIsGeneratingSummary(true);
+    try {
+      if (!notes || notes.trim() === "") {
+        toast.error("No notes available", {
+          description: "Please add some notes before generating a summary.",
+        });
+        return;
+      }
+
+      // Show loading toast
+      const loadingToast = toast.loading("Generating summary...", {
+        description: "This may take up to 30 seconds",
+      });
+
+      // Set a client-side timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+      }, 40000); // 40 second client timeout
+
+      const response = await fetch("/api/generate-summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          notes: notes.substring(0, 10000), // Limit notes length
+          meetingName: meeting?.name,
+          meetingDate: new Date(meeting?.date || "").toLocaleDateString(),
+        }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+      toast.dismiss(loadingToast);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to generate summary");
+      }
+
+      const data = await response.json();
+      setSummary(data.summary);
+      setSummaryMethod(data.method);
+
+      // Show appropriate toast based on method used
+      if (data.method === 'ai') {
+        toast.success("AI summary generated successfully!");
+      } else if (data.method === 'rate-limited') {
+        toast.warning("Rate limit reached", {
+          description: "Generated fallback summary. Try again later for AI summary.",
+        });
+      } else if (data.method === 'fallback') {
+        toast.info("Fallback summary generated", {
+          description: "AI not available, but we created a summary for you.",
+        });
+      }
+
+      setTimeout(() => {
+        saveMeetingNotes();
+      }, 10);
+
+    } catch (error: any) {
+      console.error("Error generating summary:", error);
+      
+      if (error.name === 'AbortError') {
+        toast.error("Request timed out", {
+          description: "Summary generation took too long. Try with shorter notes.",
+        });
+      } else {
+        toast.error("Failed to generate summary", {
+          description: error.message || "Please try again later.",
+        });
+      }
+    } finally {
+      setIsGeneratingSummary(false);
+    }
+  }}
+  variant="outline"
+  size="sm"
+  disabled={isGeneratingSummary || !notes.trim()}
+  className="w-full bg-primary/10 hover:bg-primary/20 border-primary/30 text-primary dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
+>
+  {isGeneratingSummary ? (
+    <>
+      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary dark:border-white mr-2"></div>
+      Generating...
+    </>
+  ) : (
+    <>
+      <MessageSquare className="h-4 w-4 mr-2" />
+      {summary ? "Regenerate Summary" : "Generate Summary"}
+    </>
+  )}
+</Button>
               </div>
             </CardContent>
           </Card>
