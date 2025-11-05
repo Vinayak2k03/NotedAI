@@ -100,16 +100,19 @@ export const useCopilotFeatures = ({
         name: "time",
         type: "string",
         description: "The time of the event in HH:MM format (optional)",
+        required: false,
       },
       {
         name: "description",
         type: "string",
         description: "A detailed description of the event (optional)",
+        required: false,
       },
       {
         name: "color",
         type: "string",
         description: "The color for the event in hexadecimal format (optional)",
+        required: false,
       },
     ],
     handler: ({ title, date, time, description, color }) => {

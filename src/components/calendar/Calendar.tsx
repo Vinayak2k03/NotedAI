@@ -205,13 +205,25 @@ export default function Calendar() {
     calendarApi.removeAllEvents();
 
     events.forEach((e) => {
+      let start: Date | string = e.date;
+      let allDay = true;
+
+      if (e.time) {
+        // Build a local Date object with the provided time to avoid timezone shifts
+        const [h, m] = e.time.split(":").map((n) => parseInt(n, 10));
+        const d = new Date(e.date);
+        d.setHours(h || 0, m || 0, 0, 0);
+        start = d; // Pass Date object directly
+        allDay = false;
+      }
+
       calendarApi.addEvent({
         id: e.id,
         title: e.title,
-        start: e.date,
+        start,
         description: e.description,
         color: e.color,
-        allDay: true,
+        allDay,
         extendedProps: { ...e },
       });
     });

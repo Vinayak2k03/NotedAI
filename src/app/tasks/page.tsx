@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -51,6 +51,7 @@ interface Task {
 
 export default function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const lastAddSigRef = useRef<{ sig: string; at: number } | null>(null);
   // Instead of using Partial<Task>, define it with required properties but optional values:
   const [newTask, setNewTask] = useState<{
     title: string;
@@ -120,11 +121,30 @@ export default function Tasks() {
     setIsLoading(true);
 
     try {
+      // Build a duplicate signature to guard against double invocation
+      const normalizedTitle = taskToAdd.title.trim().toLowerCase();
+      const dateOnly = (taskToAdd.dueDate || new Date().toISOString().split("T")[0]).trim();
+      const sig = `${normalizedTitle}|${dateOnly}`;
+      const now = Date.now();
+      if (lastAddSigRef.current && lastAddSigRef.current.sig === sig && now - lastAddSigRef.current.at < 3000) {
+        // Ignore duplicate add within 3 seconds
+        return null;
+      }
+      lastAddSigRef.current = { sig, at: now };
+
+      // Prevent adding an identical task if one already exists
+      const exists = tasks.some(
+        (t) => t.title.trim().toLowerCase() === normalizedTitle && t.dueDate === dateOnly
+      );
+      if (exists) {
+        return null;
+      }
+
       const task: Task = {
         id: Date.now().toString(),
         title: taskToAdd.title.trim(), // Ensure title is trimmed
         description: taskToAdd.description || "",
-        dueDate: taskToAdd.dueDate || new Date().toISOString().split("T")[0],
+        dueDate: dateOnly,
         completed: false,
         priority: taskToAdd.priority || "medium",
         tags: taskToAdd.tags || [],

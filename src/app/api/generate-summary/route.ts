@@ -50,11 +50,12 @@ export async function POST(req: NextRequest) {
     const result = await Promise.race([processRequest(), timeoutPromise]);
     return result as NextResponse;
 
-  } catch (error: any) {
-    console.error("Error in generate-summary API:", error);
+  } catch (error: unknown) {
+    const message = (error as Error)?.message || String(error);
+    console.error("Error in generate-summary API:", message);
     
     // If it's a timeout, return a specific response
-    if (error.message?.includes('timeout')) {
+    if (typeof message === 'string' && message.includes('timeout')) {
       return NextResponse.json(
         { 
           error: "Request timed out",
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { 
         error: "Failed to generate summary",
-        details: process.env.NODE_ENV === 'development' ? error.message : "An unexpected error occurred",
+        details: process.env.NODE_ENV === 'development' ? message : "An unexpected error occurred",
         method: 'error'
       },
       { status: 500 }

@@ -14,7 +14,7 @@ const serviceAdapter = new GroqAdapter({
   // Add a description to the @ts-expect-error
   // @ts-expect-error - Next.js special import for optimizing fonts
   groq,
-  model: "gemma2-9b-it",
+  model: process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile",
 });
 
 export const POST = async (req: NextRequest) => {
