@@ -4,6 +4,8 @@
   <h3>AI-Powered Meeting and Task Management Platform</h3>
 </div>
 
+![Preview](assets/preview.png)
+
 ## Overview
 
 NotedAI is a sophisticated productivity application that combines AI-powered note-taking, meeting management, and task organization into a seamless platform for professionals. It leverages advanced AI capabilities to streamline workflows, extract insights from meetings, and help users manage their tasks efficiently.
